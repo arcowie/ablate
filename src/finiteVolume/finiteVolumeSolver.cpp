@@ -2,6 +2,7 @@
 #include <utility>
 #include "cellInterpolant.hpp"
 #include "faceInterpolant.hpp"
+#include "faceInterpolantGPU.hpp"
 #include "processes/process.hpp"
 #include "utilities/constants.hpp"
 #include "utilities/mathUtilities.hpp"
@@ -235,6 +236,10 @@ PetscErrorCode ablate::finiteVolume::FiniteVolumeSolver::ComputeRHSFunction(Pets
     ablate::domain::Range faceRange, cellRange;
     GetFaceRange(faceRange);
     GetCellRange(cellRange);
+    PetscBool flg, gpu=PETSC_FALSE;
+
+    PetscOptionsGetBool(NULL, NULL, "-gpu_flow", &gpu, &flg);
+
     try {
         StartEvent("FiniteVolumeSolver::ComputeRHSFunction::discontinuousFluxFunction");
         if (!discontinuousFluxFunctionDescriptions.empty()) {
@@ -267,8 +272,16 @@ PetscErrorCode ablate::finiteVolume::FiniteVolumeSolver::ComputeRHSFunction(Pets
         StartEvent("FiniteVolumeSolver::ComputeRHSFunction::continuousFluxFunctionDescriptions");
         if (!continuousFluxFunctionDescriptions.empty()) {
             if (faceInterpolant == nullptr) {
+                if (gpu){
+                    faceInterpolant = std::make_unique<FaceInterpolant>(subDomain, GetRegion(), faceGeomVec, cellGeomVec);
+                }
+
+                else{
                 faceInterpolant = std::make_unique<FaceInterpolant>(subDomain, GetRegion(), faceGeomVec, cellGeomVec);
+
+                }
             }
+
 
             faceInterpolant->ComputeRHS(time, locXVec, subDomain->GetAuxVector(), locFVec, GetRegion(), continuousFluxFunctionDescriptions, faceRange, cellGeomVec, faceGeomVec);
         }

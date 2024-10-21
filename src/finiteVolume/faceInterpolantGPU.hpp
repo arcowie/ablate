@@ -1,5 +1,5 @@
-#ifndef ABLATELIBRARY_FACEINTERPOLANT_HPP
-#define ABLATELIBRARY_FACEINTERPOLANT_HPP
+#ifndef ABLATELIBRARY_FACEINTERPOLANTGPU_HPP
+#define ABLATELIBRARY_FACEINTERPOLANTGPU_HPP
 
 #include <memory>
 #include "domain/range.hpp"
@@ -8,7 +8,7 @@
 
 namespace ablate::finiteVolume {
 
-class FaceInterpolant {
+class FaceInterpolantGPU {
    private:
     //! use the subDomain to setup the problem
     std::shared_ptr<ablate::domain::SubDomain> subDomain;
@@ -69,8 +69,8 @@ class FaceInterpolant {
      * @param faceGeomVec
      * @param cellGeomVec
      */
-    FaceInterpolant(const std::shared_ptr<ablate::domain::SubDomain>& subDomain, const std::shared_ptr<domain::Region> solverRegion, Vec faceGeomVec, Vec cellGeomVec);
-    ~FaceInterpolant();
+    FaceInterpolantGPU(const std::shared_ptr<ablate::domain::SubDomain>& subDomain, const std::shared_ptr<domain::Region> solverRegion, Vec faceGeomVec, Vec cellGeomVec);
+    ~FaceInterpolantGPU();
 
     /**
      * Function assumes that the left/right solution and aux variables are continuous across the interface and values are interpolated to the face
@@ -97,7 +97,7 @@ class FaceInterpolant {
      * @param locFVec
      */
     void ComputeRHS(PetscReal time, Vec locXVec, Vec locAuxVec, Vec locFVec, const std::shared_ptr<domain::Region>& solverRegion,
-                    std::vector<FaceInterpolant::ContinuousFluxFunctionDescription>& rhsFunctions, const ablate::domain::Range& faceRange, Vec cellGeomVec, Vec faceGeomVec);
+                    std::vector<FaceInterpolantGPU::ContinuousFluxFunctionDescription>& rhsFunctions, const ablate::domain::Range& faceRange, Vec cellGeomVec, Vec faceGeomVec);
 
     /**
      * function to get the interpolated values on the face
@@ -123,4 +123,4 @@ class FaceInterpolant {
 };
 
 }  // namespace ablate::finiteVolume
-#endif  // ABLATELIBRARY_FACEINTERPOLANT_HPP
+#endif  // ABLATELIBRARY_FACEINTERPOLANTGPU_HPP
