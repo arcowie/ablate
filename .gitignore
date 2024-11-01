@@ -54,3 +54,17 @@ cmake-build-*/
 
 # Backup files
 *.bak
+
+inputs/_compressibleFlowPgsLodi/compressibleSublimationPipe.yaml
+
+inputs/_compressibleFlowPgsLodi/bottomBoundary_monitor.hdf5
+
+inputs/_compressibleFlowPgsLodi/domain.hdf5
+
+inputs/
+
+cmakeAblateBuild.txt
+
+configureAblateBuild.txt
+
+testOutputLog.txt
